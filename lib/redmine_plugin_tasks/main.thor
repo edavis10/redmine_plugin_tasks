@@ -35,15 +35,25 @@ module RedminePluginTasks
 
     desc "readme", "generate a Readme"
     def readme
-      @plugin_name = ask("What is the plugin name?")
-      @plugin_description = ask("What does the plugin do?")
-      @redmine_project = ask("What is the Redmine project identifier?")
-      @github_repo = ask("What is the Github repo called?")
-      
+      ask_basic_questions
       template("templates/README.rdoc.erb", "README.rdoc")
+    end
+
+    desc "rakefile", "generate a Rakefile"
+    def rakefile
+      ask_basic_questions
+      template("templates/Rakefile.erb", "Rakefile")
     end
     
     private
+
+    def ask_basic_questions
+      @plugin_name = ask("What is the plugin name?")
+      @plugin_short_description = ask("What does the plugin do (short)?")
+      @plugin_description = ask("What does the plugin do (long)?")
+      @redmine_project = ask("What is the Redmine project identifier?")
+      @github_repo = ask("What is the Github repo called?")
+    end
     
     def add_person(people)
       name = ask("What is their name?")
