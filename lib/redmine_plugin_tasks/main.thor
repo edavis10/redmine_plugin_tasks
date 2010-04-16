@@ -21,6 +21,26 @@ module RedminePluginTasks
 
       template("templates/COPYRIGHT.erb", "COPYRIGHT.txt")
     end
+
+    desc "credits", "generate a Credits file"
+    def credits
+      @people = []
+      while yes?("Add a person?", :green)
+        add_person(@people)
+      end
+
+      template("templates/CREDITS.erb", "CREDITS.txt")
+
+    end
+
+    private
+    
+    def add_person(people)
+      name = ask("What is their name?")
+      role = ask("What is their role in the project?")
+      people << {:name => name, :role => role}
+      people
+    end
   end
 end
 
