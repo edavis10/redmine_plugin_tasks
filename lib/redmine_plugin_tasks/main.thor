@@ -13,6 +13,14 @@ module RedminePluginTasks
     def gpl2
       copy_file 'templates/GPL.txt', "GPL.txt"
     end
+
+    desc "copyright", "generate a copyright file (GPL2)"
+    def copyright
+      @description = ask("What is your program and what does it do?")
+      @copyright_holder = ask("Who is the copyright holder?")
+
+      template("templates/COPYRIGHT.erb", "COPYRIGHT.txt")
+    end
   end
 end
 
