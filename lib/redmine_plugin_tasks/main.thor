@@ -33,6 +33,16 @@ module RedminePluginTasks
 
     end
 
+    desc "readme", "generate a Readme"
+    def readme
+      @plugin_name = ask("What is the plugin name?")
+      @plugin_description = ask("What does the plugin do?")
+      @redmine_project = ask("What is the Redmine project identifier?")
+      @github_repo = ask("What is the Github repo called?")
+      
+      template("templates/README.rdoc.erb", "README.rdoc")
+    end
+    
     private
     
     def add_person(people)
