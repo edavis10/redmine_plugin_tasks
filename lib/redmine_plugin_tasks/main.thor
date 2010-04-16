@@ -9,6 +9,17 @@ module RedminePluginTasks
   end
 
   class Docs < Base
+    desc "all", "Generate all docs for a new plugin"
+    def all
+      ask_basic_questions
+
+      invoke :gpl2
+      invoke :copyright
+      invoke :credits
+      invoke :readme
+      invoke :rakefile
+    end
+
     desc "gpl2", "generate the GPLv2 license"
     def gpl2
       copy_file 'templates/GPL.txt', "GPL.txt"
@@ -16,9 +27,8 @@ module RedminePluginTasks
 
     desc "copyright", "generate a copyright file (GPL2)"
     def copyright
-      @description = ask("What is your program and what does it do?")
-      @copyright_holder = ask("Who is the copyright holder?")
-
+      ask_basic_questions
+      @description = @plugin_name + ' is a plugin that ' + @plugin_short_description
       template("templates/COPYRIGHT.erb", "COPYRIGHT.txt")
     end
 
@@ -48,11 +58,12 @@ module RedminePluginTasks
     private
 
     def ask_basic_questions
-      @plugin_name = ask("What is the plugin name?")
-      @plugin_short_description = ask("What does the plugin do (short)?")
-      @plugin_description = ask("What does the plugin do (long)?")
-      @redmine_project = ask("What is the Redmine project identifier?")
-      @github_repo = ask("What is the Github repo called?")
+      @plugin_name ||= ask("What is the plugin name?")
+      @plugin_short_description ||= ask("What does the plugin do (short)?")
+      @plugin_description ||= ask("What does the plugin do (long)?")
+      @copyright_holder ||= ask("Who is the copyright holder?")
+      @redmine_project ||= ask("What is the Redmine project identifier?")
+      @github_repo ||= ask("What is the Github repo called?")
     end
     
     def add_person(people)
