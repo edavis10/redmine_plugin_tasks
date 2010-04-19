@@ -1,4 +1,6 @@
 # module: redmine_plugin_tasks
+require 'active_support'
+
 module RedminePluginTasks
   class Base < Thor
     include Thor::Actions
@@ -78,6 +80,16 @@ module RedminePluginTasks
     desc "test_unit", "generates a basic Test::Unit file structure"
     def test_unit
       directory 'templates/test', 'test'
+    end
+  end
+
+  class Database < Base
+    # TODO: Port over to Rails 3's generators
+    
+    desc "migration", "generates a migration, using Rail's migration"
+    def migration(name)
+      @name = name
+      template("templates/migration.erb", "db/migrate/xxx_#{@name.underscore}.rb")
     end
   end
 end
