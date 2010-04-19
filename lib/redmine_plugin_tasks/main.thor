@@ -92,5 +92,21 @@ module RedminePluginTasks
       template("templates/migration.erb", "db/migrate/xxx_#{@name.underscore}.rb")
     end
   end
+
+  class Redmine < Base
+    desc "hook", "generates the class and tests to register a Redmine hook"
+    def hook(name)
+      @plugin_name = ask("What is the plugin name?")
+      @hook_name = name
+      @hook_name ||= ask("What hook do you want to use?")
+
+      template("templates/hook.erb", "lib/#{@plugin_name}/hooks/#{@hook_name.underscore}.rb")
+      template("templates/hook_test.erb", "test/unit/lib/#{@plugin_name}/hooks/#{@hook_name.underscore}_test.rb")
+
+      append_file 'init.rb' do
+        "require '#{@plugin_name}/hooks/#{@hook_name.underscore}'\n"
+      end
+    end
+  end
 end
 
