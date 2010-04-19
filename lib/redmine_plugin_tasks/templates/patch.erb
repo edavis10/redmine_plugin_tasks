@@ -1,0 +1,20 @@
+module <%= @plugin_name.underscore.camelize %>
+  module Patches
+    module <%= @class_name.underscore.camelize -%>Patch
+      def self.included(base)
+        base.extend(ClassMethods)
+
+        base.send(:include, InstanceMethods)
+        base.class_eval do
+          unloadable
+        end
+      end
+
+      module ClassMethods
+      end
+
+      module InstanceMethods
+      end
+    end
+  end
+end

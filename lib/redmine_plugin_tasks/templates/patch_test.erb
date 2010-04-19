@@ -1,0 +1,6 @@
+require File.dirname(__FILE__) + '/../../../../test_helper'
+
+class <%= @plugin_name.underscore.camelize -%>::Patches::<%= @class_name.underscore.camelize -%>Test < ActionController::TestCase
+
+  should "be tested"
+end

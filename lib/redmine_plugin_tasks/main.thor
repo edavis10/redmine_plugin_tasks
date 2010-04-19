@@ -107,6 +107,36 @@ module RedminePluginTasks
         "require '#{@plugin_name}/hooks/#{@hook_name.underscore}'\n"
       end
     end
+
+    desc "patch", "generates the modules needed to monkey patch a Redmine core class"
+    def patch(class_name)
+      @plugin_name = ask("What is the plugin name?")
+      @class_name = class_name
+      patch_name = "#{@plugin_name.underscore.camelize}::Patches::#{@class_name.underscore.camelize}Patch"
+      
+      template("templates/patch.erb", "lib/#{@plugin_name}/patches/#{@class_name.underscore}_patch.rb")
+      template("templates/patch_test.erb", "test/unit/lib/#{@plugin_name}/patches/#{@class_name.underscore}_patch_test.rb")
+
+      has_dispatcher = false
+      File.readlines('init.rb') do |line|
+        if line.match(/dispatcher/i)
+          has_dispatcher = true
+        end
+      end
+
+      unless has_dispatcher
+        append_file 'init.rb' do
+          "require 'dispatcher'\n" +
+          "Dispatcher.to_prepare :#{@plugin_name} do\nend"
+        end
+      end
+
+      inject_into_file 'init.rb', :after => "Dispatcher.to_prepare :#{@plugin_name} do" do
+        "\n\n  require_dependency '#{@class_name.underscore}'\n" +
+          "  #{@class_name.underscore.camelize}.send(:include, #{patch_name})"
+      end
+      
+    end
   end
 end
 
