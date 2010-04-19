@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../../../../test_helper'
 
-class <%= @plugin_name.underscore.camelize -%>::HooksTest < ActionController::TestCase
+class <%= @plugin_name.underscore.camelize -%>::Hooks::<%= @hook_name.underscore.camelize -%>Test < ActionController::TestCase
   include Redmine::Hook::Helper
 
   def controller
