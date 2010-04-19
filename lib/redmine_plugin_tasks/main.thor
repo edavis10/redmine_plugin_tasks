@@ -73,5 +73,12 @@ module RedminePluginTasks
       people
     end
   end
+
+  class Testing < Base
+    desc "test_unit", "generates a basic Test::Unit file structure"
+    def test_unit
+      directory 'templates/test', 'test'
+    end
+  end
 end
 
