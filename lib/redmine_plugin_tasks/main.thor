@@ -81,6 +81,11 @@ module RedminePluginTasks
     def test_unit
       directory 'templates/test', 'test'
     end
+
+    desc "autotest", "adds an autotest configuration"
+    def autotest
+      directory 'templates/autotest', 'autotest'
+    end
   end
 
   class Database < Base
