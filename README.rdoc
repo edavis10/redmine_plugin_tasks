@@ -1,6 +1,10 @@
 = redmine_plugin_tasks
 
-Description goes here.
+Set of thor tasks I use while developing Redmine plugins.
+
+== Install
+
+`ruby setup.rb`
 
 == Note on Patches/Pull Requests
  
