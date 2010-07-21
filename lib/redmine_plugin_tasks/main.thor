@@ -113,6 +113,21 @@ module RedminePluginTasks
       end
     end
 
+    desc "locales", "generates all of the empty locales for i18n"
+    def locales
+      locales = [:sr, :ja, :en, :fi, :zh, :ko, :bs, :hu, "pt-BR", :es, :gl, "zh-TW", :pl, :sv, :sl, :th, :fr, :uk, :id, :de, :bg, :nl, :tr, :he, :pt, :it, :vi, :ca, :el, :ru, :da, :eu, :lt, :hr, :sk, :cs, :ro, :no]
+
+      locales.each do |locale|
+        locale_file = "config/locales/#{locale}.yml"
+        unless File.exists?(locale_file)
+          create_file locale_file do
+            "\"#{locale}\":\n" +
+              "  test_field: Test"
+          end
+        end
+      end
+    end
+
     desc "patch", "generates the modules needed to monkey patch a Redmine core class"
     def patch(class_name)
       @plugin_name = ask("What is the plugin name?")
