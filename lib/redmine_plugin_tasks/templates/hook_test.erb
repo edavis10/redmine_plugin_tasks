@@ -1,26 +1,12 @@
-require File.dirname(__FILE__) + '/../../../../test_helper'
+require File.dirname(__FILE__) + '/../../../test_helper'
 
-class <%= @plugin_name.underscore.camelize -%>::Hooks::<%= @hook_name.underscore.camelize -%>Test < ActionController::TestCase
+class <%= @plugin_name.underscore.camelize -%>::Hooks::<%= @hook_name.underscore.camelize -%>Test < ActionController::IntegrationTest
   include Redmine::Hook::Helper
 
-  def controller
-    @controller ||= ApplicationController.new
-    @controller.response ||= ActionController::TestResponse.new
-    @controller
-  end
-
-  def request
-    @request ||= ActionController::TestRequest.new
-  end
-  
-  def hook(args={})
-    call_hook :<%= @hook_name -%>, args
-  end
-
   context "#<%= @hook_name -%>" do
-    should "return an empty string" do
-      @response.body = hook
-      assert @response.body.blank?
+    setup do
     end
+
+    should "be tested"
   end
 end
