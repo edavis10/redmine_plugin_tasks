@@ -42,6 +42,13 @@ module RedmineWebratHelper
   def visit_issue_bulk_edit_page(issues)
     visit url_for(:controller => 'issues', :action => 'bulk_edit', :ids => issues.collect(&:id))
   end
+
+  # Cleanup current_url to remove the host; sometimes it's present, sometimes it's not
+  def current_path
+    return nil if current_url.nil?
+    return current_url.gsub("http://www.example.com","")
+  end
+
 end
 
 class ActionController::IntegrationTest
