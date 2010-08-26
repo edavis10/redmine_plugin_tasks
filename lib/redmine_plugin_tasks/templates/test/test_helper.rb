@@ -45,7 +45,7 @@ module RedmineWebratHelper
 end
 
 class ActionController::IntegrationTest
-  include RedmineWebrateHelper
+  include RedmineWebratHelper
 end
 
 class ActiveSupport::TestCase
