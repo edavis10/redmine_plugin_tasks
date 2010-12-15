@@ -115,7 +115,7 @@ module RedminePluginTasks
 
     desc "locales", "generates all of the empty locales for i18n"
     def locales
-      locales = [:sr, :ja, :en, :fi, :zh, :ko, :bs, :hu, "pt-BR", :es, :gl, "zh-TW", :pl, :sv, :sl, :th, :fr, :uk, :id, :de, :bg, :nl, :tr, :he, :pt, :it, :vi, :ca, :el, :ru, :da, :eu, :lt, :hr, :sk, :cs, :ro, :no]
+      locales = [:mk, :sr, :ja, :en, :fi, :zh, :ko, :bs, :hu, "pt-BR", :es, :gl, "zh-TW", :pl, :sv, :sl, :th, :fr, :uk, :id, :de, :bg, "sr-YU", :lv, :nl, :tr, :he, :pt, :it, :vi, :ca, :el, :ru, "en-GB", :da, :eu, :lt, :hr, :sk, :mn, :cs, :ro, :no]
 
       locales.each do |locale|
         locale_file = "config/locales/#{locale}.yml"
@@ -131,8 +131,7 @@ module RedminePluginTasks
     desc "copy_locales", "copies the EN locales to the others for i18n"
     def copy_locales
       en_content = File.read("config/locales/en.yml")
-
-      locales = [:sr, :ja, :fi, :zh, :ko, :bs, :hu, "pt-BR", :es, :gl, "zh-TW", :pl, :sv, :sl, :th, :fr, :uk, :id, :de, :bg, :nl, :tr, :he, :pt, :it, :vi, :ca, :el, :ru, :da, :eu, :lt, :hr, :sk, :cs, :ro, :no]
+      locales = [:mk, :sr, :ja, :en, :fi, :zh, :ko, :bs, :hu, "pt-BR", :es, :gl, "zh-TW", :pl, :sv, :sl, :th, :fr, :uk, :id, :de, :bg, "sr-YU", :lv, :nl, :tr, :he, :pt, :it, :vi, :ca, :el, :ru, "en-GB", :da, :eu, :lt, :hr, :sk, :mn, :cs, :ro, :no]
 
       locales.each do |locale|
         locale_file = "config/locales/#{locale}.yml"
