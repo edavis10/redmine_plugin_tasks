@@ -1,4 +1,4 @@
-module <%= @plugin_name.underscore.camelize %>
+module <%= options[:plugin_name].underscore.camelize %>
   module Patches
     module <%= @class_name.underscore.camelize -%>Patch
       def self.included(base)

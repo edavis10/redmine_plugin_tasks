@@ -4,7 +4,7 @@ require 'redmine_plugin_support'
 Dir[File.expand_path(File.dirname(__FILE__)) + "/lib/tasks/**/*.rake"].sort.each { |ext| load ext }
 
 RedminePluginSupport::Base.setup do |plugin|
-  plugin.project_name = '<%= @plugin_name -%>'
+  plugin.project_name = '<%= options[:plugin_name] -%>'
   plugin.default_task = [:test]
   plugin.tasks = [:db, :doc, :release, :clean, :test, :stats, :metrics]
   # TODO: gem not getting this automaticly
@@ -14,11 +14,11 @@ end
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |s|
-    s.name = "<%= @plugin_name -%>"
-    s.summary = "<%= @plugin_short_description -%>"
+    s.name = "<%= options[:plugin_name] -%>"
+    s.summary = "<%= options[:short_desc] -%>"
     s.email = "edavis@littlestreamsoftware.com"
-    s.homepage = "https://projects.littlestreamsoftware.com/projects/<%= @redmine_project -%>"
-    s.description = "<%= @plugin_description -%>"
+    s.homepage = "https://projects.littlestreamsoftware.com/projects/<%= options[:project] -%>"
+    s.description = "<%= options[:desc] -%>"
     s.authors = ["Eric Davis"]
     s.rubyforge_project = "TODO" # TODO
     s.files =  FileList[

@@ -12,9 +12,13 @@ module RedminePluginTasks
 
   class Docs < Base
     desc "all", "Generate all docs for a new plugin"
+    method_option :plugin_name, :type => :string, :required => true
+    method_option :copyright, :type => :string, :required => true
+    method_option :short_desc, :type => :string, :required => true
+    method_option :desc, :type => :string, :required => true
+    method_option :github_repo, :type => :string, :required => true
+    method_option :project, :type => :string, :required => true
     def all
-      ask_basic_questions
-
       invoke :gpl2
       invoke :copyright
       invoke :credits
@@ -28,9 +32,11 @@ module RedminePluginTasks
     end
 
     desc "copyright", "generate a copyright file (GPL2)"
+    method_option :plugin_name, :type => :string, :required => true
+    method_option :copyright, :type => :string, :required => true
+    method_option :short_desc, :type => :string, :required => true
     def copyright
-      ask_basic_questions
-      @description = @plugin_name + ' is a plugin that ' + @plugin_short_description
+      @description = options[:plugin_name] + ' is a plugin that ' + options[:short_desc]
       template("templates/COPYRIGHT.erb", "COPYRIGHT.txt")
     end
 
@@ -46,28 +52,25 @@ module RedminePluginTasks
     end
 
     desc "readme", "generate a Readme"
+    method_option :plugin_name, :type => :string, :required => true
+    method_option :project, :type => :string, :default => ''
+    method_option :desc, :type => :string, :default => ''
+    method_option :github_repo, :type => :string, :default => ''
     def readme
-      ask_basic_questions
       template("templates/README.rdoc.erb", "README.rdoc")
     end
 
     desc "rakefile", "generate a Rakefile"
+    method_option :plugin_name, :type => :string, :required => true
+    method_option :short_desc, :type => :string, :required => true
+    method_option :project, :type => :string, :default => ''
+    method_option :desc, :type => :string, :default => ''
     def rakefile
-      ask_basic_questions
       template("templates/Rakefile.erb", "Rakefile")
     end
     
     private
 
-    def ask_basic_questions
-      @plugin_name ||= ask("What is the plugin name?")
-      @plugin_short_description ||= ask("What does the plugin do (short)?")
-      @plugin_description ||= ask("What does the plugin do (long)?")
-      @copyright_holder ||= ask("Who is the copyright holder?")
-      @redmine_project ||= ask("What is the Redmine project identifier?")
-      @github_repo ||= ask("What is the Github repo called?")
-    end
-    
     def add_person(people)
       name = ask("What is their name?")
       role = ask("What is their role in the project?")
@@ -92,24 +95,22 @@ module RedminePluginTasks
     # TODO: Port over to Rails 3's generators
     
     desc "migration", "generates a migration, using Rail's migration"
-    def migration(name)
-      @name = name
-      template("templates/migration.erb", "db/migrate/xxx_#{@name.underscore}.rb")
+    method_option :name, :type => :string, :required => true
+    def migration
+      template("templates/migration.erb", "db/migrate/xxx_#{options[:name].underscore}.rb")
     end
   end
 
   class Redmine < Base
     desc "hook", "generates the class and tests to register a Redmine hook"
-    def hook(name)
-      @plugin_name = ask("What is the plugin name?")
-      @hook_name = name
-      @hook_name ||= ask("What hook do you want to use?")
-
-      template("templates/hook.erb", "lib/#{@plugin_name}/hooks/#{@hook_name.underscore}_hook.rb")
-      template("templates/hook_test.erb", "test/integration/#{@plugin_name}/hooks/#{@hook_name.underscore}_hook_test.rb")
+    method_option :plugin_name, :type => :string, :required => true
+    method_option :hook_name, :type => :string, :required => true
+    def hook
+      template("templates/hook.erb", "lib/#{options[:plugin_name]}/hooks/#{options[:hook_name].underscore}_hook.rb")
+      template("templates/hook_test.erb", "test/integration/#{options[:plugin_name]}/hooks/#{options[:hook_name].underscore}_hook_test.rb")
 
       append_file 'init.rb' do
-        "require '#{@plugin_name}/hooks/#{@hook_name.underscore}_hook'\n"
+        "require '#{options[:plugin_name]}/hooks/#{options[:hook_name].underscore}_hook'\n"
       end
     end
 
@@ -144,13 +145,14 @@ module RedminePluginTasks
     end
 
     desc "patch", "generates the modules needed to monkey patch a Redmine core class"
-    def patch(class_name)
-      @plugin_name = ask("What is the plugin name?")
-      @class_name = class_name
-      patch_name = "#{@plugin_name.underscore.camelize}::Patches::#{@class_name.underscore.camelize}Patch"
+    method_option :plugin_name, :type => :string, :required => true
+    method_option :patch_class, :type => :string, :required => true
+    def patch
+      @class_name = options[:patch_class]
+      patch_name = "#{options[:plugin_name].underscore.camelize}::Patches::#{@class_name.underscore.camelize}Patch"
       
-      template("templates/patch.erb", "lib/#{@plugin_name}/patches/#{@class_name.underscore}_patch.rb")
-      template("templates/patch_test.erb", "test/unit/lib/#{@plugin_name}/patches/#{@class_name.underscore}_patch_test.rb")
+      template("templates/patch.erb", "lib/#{options[:plugin_name]}/patches/#{@class_name.underscore}_patch.rb")
+      template("templates/patch_test.erb", "test/unit/lib/#{options[:plugin_name]}/patches/#{@class_name.underscore}_patch_test.rb")
 
       has_dispatcher = false
       File.readlines('init.rb') do |line|
@@ -162,11 +164,11 @@ module RedminePluginTasks
       unless has_dispatcher
         append_file 'init.rb' do
           "require 'dispatcher'\n" +
-          "Dispatcher.to_prepare :#{@plugin_name} do\nend"
+          "Dispatcher.to_prepare :#{options[:plugin_name]} do\nend"
         end
       end
 
-      inject_into_file 'init.rb', :after => "Dispatcher.to_prepare :#{@plugin_name} do" do
+      inject_into_file 'init.rb', :after => "Dispatcher.to_prepare :#{options[:plugin_name]} do" do
         "\n\n  require_dependency '#{@class_name.underscore}'\n" +
           "  #{@class_name.underscore.camelize}.send(:include, #{patch_name})"
       end

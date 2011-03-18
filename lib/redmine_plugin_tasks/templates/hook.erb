@@ -1,7 +1,7 @@
-module <%= @plugin_name.underscore.camelize %>
+module <%= options[:plugin_name].underscore.camelize %>
   module Hooks
-    class <%= @hook_name.underscore.camelize -%>Hook < Redmine::Hook::ViewListener
-      def <%= @hook_name.underscore -%>(context={})
+    class <%= options[:hook_name].underscore.camelize -%>Hook < Redmine::Hook::ViewListener
+      def <%= options[:hook_name].underscore -%>(context={})
         return ''
       end
     end

@@ -1,6 +1,6 @@
-= <%= @plugin_name %>
+= <%= options[:plugin_name] %>
 
-<%= @plugin_description %>
+<%= options[:desc] %>
 
 == Features
 
@@ -8,7 +8,7 @@ TODO: fill in features
 
 == Getting the plugin
 
-A copy of the plugin can be downloaded from {Little Stream Software}[https://projects.littlestreamsoftware.com/projects/<%= @redmine_project -%>/files] or from {GitHub}[http://github.com/edavis10/<%= @github_repo -%>]
+A copy of the plugin can be downloaded from {Little Stream Software}[https://projects.littlestreamsoftware.com/projects/<%= options[:project] -%>/files] or from {GitHub}[http://github.com/edavis10/<%= options[:github_repo] -%>]
 
 
 == Installation and Setup

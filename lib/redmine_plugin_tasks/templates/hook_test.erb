@@ -1,9 +1,9 @@
 require File.dirname(__FILE__) + '/../../../test_helper'
 
-class <%= @plugin_name.underscore.camelize -%>::Hooks::<%= @hook_name.underscore.camelize -%>Test < ActionController::IntegrationTest
+class <%= options[:plugin_name].underscore.camelize -%>::Hooks::<%= options[:hook_name].underscore.camelize -%>Test < ActionController::IntegrationTest
   include Redmine::Hook::Helper
 
-  context "#<%= @hook_name -%>" do
+  context "#<%= options[:hook_name] -%>" do
     setup do
     end
 
