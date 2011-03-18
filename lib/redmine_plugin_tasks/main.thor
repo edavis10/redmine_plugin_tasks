@@ -81,8 +81,10 @@ module RedminePluginTasks
 
   class Testing < Base
     desc "test_unit", "generates a basic Test::Unit file structure"
+    method_option :integration, :type => :string, :required => true, :default => 'webrat', :desc => 'webrat or capybara'
     def test_unit
       directory 'templates/test', 'test'
+      template("templates/test_helper.rb.erb", "test/test_helper.rb")
     end
 
     desc "autotest", "adds an autotest configuration"

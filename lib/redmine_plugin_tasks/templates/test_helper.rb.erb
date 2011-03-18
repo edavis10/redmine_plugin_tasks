@@ -4,17 +4,21 @@ require File.expand_path(File.dirname(__FILE__) + '/../../../../test/test_helper
 # Ensure that we are using the temporary fixture path
 Engines::Testing.set_fixture_path
 
+<% if options[:integration] == 'webrat' %>
 require "webrat"
 
 Webrat.configure do |config|
   config.mode = :rails
 end
+<% elsif options[:integration] == 'capybara' %>
+require 'capybara/rails'
+<% end %>
 
 def User.add_to_project(user, project, role)
   Member.generate!(:principal => user, :project => project, :roles => [role])
 end
 
-module RedmineWebratHelper
+module ChiliProjectIntegrationTestHelper
   def login_as(user="existing", password="existing")
     visit "/login"
     fill_in 'Login', :with => user
@@ -43,16 +47,45 @@ module RedmineWebratHelper
     visit url_for(:controller => 'issues', :action => 'bulk_edit', :ids => issues.collect(&:id))
   end
 
+  <% if options[:integration] == 'webrat' %>
   # Cleanup current_url to remove the host; sometimes it's present, sometimes it's not
   def current_path
     return nil if current_url.nil?
     return current_url.gsub("http://www.example.com","")
   end
 
+  <% elsif options[:integration] == 'capybara' %>
+  # Capybara doesn't set the response object so we need to glue this to
+  # it's own object but without @response
+  def assert_response(code)
+    # Rewrite human status codes to numeric
+    converted_code = case code
+                     when :success
+                       200
+                     when :missing
+                       404
+                     when :redirect
+                       302
+                     when :error
+                       500
+                     when code.is_a?(Symbol)
+                       ActionController::StatusCodes::SYMBOL_TO_STATUS_CODE[code]
+                     else
+                       code
+                     end
+
+    assert_equal converted_code, page.status_code
+  end
+
+  <% end %>
+
 end
 
 class ActionController::IntegrationTest
-  include RedmineWebratHelper
+  include ChiliProjectIntegrationTestHelper
+  <% if options[:integration] == 'capybara' %>
+  include Capybara
+  <% end %>
 end
 
 class ActiveSupport::TestCase
