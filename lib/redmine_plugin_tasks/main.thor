@@ -24,6 +24,7 @@ module RedminePluginTasks
       invoke :credits
       invoke :readme
       invoke :rakefile
+      invoke :gemfile
     end
 
     desc "gpl2", "generate the GPLv2 license"
@@ -67,6 +68,11 @@ module RedminePluginTasks
     method_option :desc, :type => :string, :default => ''
     def rakefile
       template("templates/Rakefile.erb", "Rakefile")
+    end
+
+    desc "gemfile", "generate a Gemfile"
+    def gemfile
+      template("templates/Gemfile.erb", "Gemfile")
     end
     
     private
