@@ -1,5 +1,6 @@
 # module: redmine_plugin_tasks
 require 'active_support'
+require 'active_support/inflector'
 
 module RedminePluginTasks
   class Base < Thor
